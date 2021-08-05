@@ -1,11 +1,11 @@
 import React from 'react';
 import Video from 'twilio-video';
-import { Container, Link, Typography, Paper, Grid } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
+import { Container, Typography, Paper, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import { isMobile, mobileOperatingSystem } from '../../utils/'
 import { useAppState } from '../../state';
-import updateParticipantFailed from '../../utils/ParticipantStatus/updateParticipantFailed'
+import updateParticipant from '../../utils/ParticipantStatus/updateParticipant'
 import redirectRootPath from '../../utils/redirectRootPath'
 
 const useStyles = makeStyles({
@@ -43,15 +43,15 @@ const handleClick = () => {
   }
 };
 
-export default function({ children }: { children: React.ReactElement }) {
+export default function UnsupportedBrowserWarning({ children }: { children: React.ReactElement }) {
   const classes = useStyles();
   const message = browserErrorMessage();
   const { appointmentID, user } = useAppState();
   if (!Video.isSupported) {
-    updateParticipantFailed(appointmentID, user.participantID, { name: 'BrowserNotSupported', message: 'Browser not supported' });
+    updateParticipant(appointmentID, user.participantID, 'failed', { name: 'BrowserNotSupported', message: 'Browser not supported' });
     return (
       <Container>
-        <Grid container justify="center" className={classes.container}>
+        <Grid container justifyContent="center" className={classes.container}>
           <Grid item xs={12} sm={6}>
             <Paper className={classes.paper}>
               <Typography variant="h4" className={classes.heading}>

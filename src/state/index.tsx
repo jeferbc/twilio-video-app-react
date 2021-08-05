@@ -2,10 +2,11 @@ import React, { createContext, useContext, useReducer, useState } from 'react';
 import { RoomType } from '../types';
 import { TwilioError } from 'twilio-video';
 import { settingsReducer, initialSettings, Settings, SettingsAction } from './settings/settingsReducer';
+import useActiveSinkId from './useActiveSinkId/useActiveSinkId';
 
 export interface StateContextType {
-  error: TwilioError | null;
-  setError(error: TwilioError | null): void;
+  error: TwilioError | Error | null;
+  setError(error: TwilioError | Error | null): void;
   user?: { displayName: undefined; photoURL: undefined; participantID: undefined, userType: undefined };
   token?: string
   roomName?: string
@@ -22,7 +23,7 @@ export interface StateContextType {
 export const StateContext = createContext<StateContextType>(null!);
 
 /*
-  The 'react-hooks/rules-of-hooks' linting rules prevent React Hooks fron being called
+  The 'react-hooks/rules-of-hooks' linting rules prevent React Hooks from being called
   inside of if() statements. This is because hooks must always be called in the same order
   every time a component is rendered. The 'react-hooks/rules-of-hooks' rule is disabled below
   because the "if (process.env.REACT_APP_SET_AUTH === 'firebase')" statements are evaluated
@@ -32,13 +33,16 @@ export const StateContext = createContext<StateContextType>(null!);
 */
 export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
   const [error, setError] = useState<TwilioError | null>(null);
-  const [user, setUser] = useState({ displayName: props.userName, photoURL: props.userAvatar, participantID: props.participantID, userType: props.userType });
-  const [appointmentID, setAppointmentID] = useState(props.appointmentID);
-  const [token, setToken] = useState(props.token);
-  const [roomName, setRoomName] = useState(props.roomName);
-  const [roomEndTime, setRoomEndTime] = useState(props.roomEndTime);
-  const [activeSinkId, setActiveSinkId] = useState('default');
+  const [user] = useState({ displayName: props.userName, photoURL: props.userAvatar, participantID: props.participantID, userType: props.userType });
+  const [appointmentID] = useState(props.appointmentID);
+  const [token] = useState(props.token);
+  const [roomName] = useState(props.roomName);
+  const [roomEndTime] = useState(props.roomEndTime);
+  const [test] = useState(props.test);
+  const [activeSinkId, setActiveSinkId] = useActiveSinkId();
   const [settings, dispatchSetting] = useReducer(settingsReducer, initialSettings);
+  const [roomType] = useState<RoomType>('go');
+
   let contextValue = {
     error,
     user,
@@ -51,6 +55,8 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
     settings,
     dispatchSetting,
     appointmentID,
+    roomType,
+    test,
   } as StateContextType;
   return <StateContext.Provider value={{ ...contextValue }}>{props.children}</StateContext.Provider>;
 }

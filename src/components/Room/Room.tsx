@@ -1,28 +1,40 @@
 import React from 'react';
-import ParticipantStrip from '../ParticipantStrip/ParticipantStrip';
-import { styled } from '@material-ui/core/styles';
+import clsx from 'clsx';
+import { makeStyles, Theme } from '@material-ui/core';
+import ChatWindow from '../ChatWindow/ChatWindow';
+import ParticipantList from '../ParticipantList/ParticipantList';
 import MainParticipant from '../MainParticipant/MainParticipant';
+import useChatContext from '../../hooks/useChatContext/useChatContext';
 
-const Container = styled('div')(({ theme }) => ({
-  position: 'relative',
-  height: '100%',
-  display: 'grid',
-  gridTemplateColumns: `${theme.sidebarWidth}px 1fr`,
-  gridTemplateAreas: '". participantList"',
-  gridTemplateRows: '100%',
-  [theme.breakpoints.down('xs')]: {
-    gridTemplateAreas: '"participantList" "."',
-    gridTemplateColumns: `auto`,
-    gridTemplateRows: `calc(100% - ${theme.sidebarMobileHeight + 12}px) ${theme.sidebarMobileHeight + 6}px`,
-    gridGap: '6px',
-  },
-}));
+const useStyles = makeStyles((theme: Theme) => {
+  const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
+    theme.sidebarMobilePadding * 2 +
+    theme.participantBorderWidth}px`;
+
+  return {
+    container: {
+      position: 'relative',
+      height: '100%',
+      display: 'grid',
+      gridTemplateColumns: `1fr ${theme.sidebarWidth}px`,
+      gridTemplateRows: '100%',
+      [theme.breakpoints.down('sm')]: {
+        gridTemplateColumns: `100%`,
+        gridTemplateRows: `calc(100% - ${totalMobileSidebarHeight}) ${totalMobileSidebarHeight}`,
+      },
+    },
+    chatWindowOpen: { gridTemplateColumns: `1fr ${theme.sidebarWidth}px ${theme.chatWindowWidth}px` },
+  };
+});
 
 export default function Room() {
+  const classes = useStyles();
+  const { isChatWindowOpen } = useChatContext();
   return (
-    <Container>
-      <ParticipantStrip />
+    <div className={clsx(classes.container, { [classes.chatWindowOpen]: isChatWindowOpen })}>
       <MainParticipant />
-    </Container>
+      <ParticipantList />
+      <ChatWindow />
+    </div>
   );
 }
