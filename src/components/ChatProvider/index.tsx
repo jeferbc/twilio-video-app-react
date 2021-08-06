@@ -25,7 +25,6 @@ export const ChatProvider: React.FC = ({ children }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
   const [chatClient, setChatClient] = useState<Client>();
-
   const connect = useCallback(
     (token: string) => {
       Client.create(token)

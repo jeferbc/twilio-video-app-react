@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
     container: props => ({
       backgroundColor: theme.palette.background.default,
       bottom: 0,
-      width: `${ props.UserType == 'Doctor' ? 'calc(100% - 70px)' : '100%'}`,
+      width: `${ props.UserType == 'Doctor' ? 'calc(100% - 60px)' : '100%'}`,
       right: 0,
       height: `${theme.footerHeight}px`,
       position: 'fixed',
@@ -69,7 +69,6 @@ export default function MenuBar(props) {
   const { isSharingScreen, toggleScreenShare } = useVideoContext();
   const roomState = useRoomState();
   const isReconnecting = roomState === 'reconnecting';
-  const { room } = useVideoContext();
 
   return (
     <>

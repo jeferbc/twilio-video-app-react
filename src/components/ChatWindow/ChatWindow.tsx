@@ -17,9 +17,10 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         position: 'fixed',
         top: 0,
-        left: 0,
+        left: '60px',
         bottom: 0,
         right: 0,
+        zIndex: 100,
       },
     },
     hide: {

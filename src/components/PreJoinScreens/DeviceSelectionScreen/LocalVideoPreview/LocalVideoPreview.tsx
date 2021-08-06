@@ -1,10 +1,10 @@
 import React from 'react';
-import AvatarIcon from '../../../../icons/AvatarIcon';
 import { makeStyles, Theme, Typography } from '@material-ui/core';
 import LocalAudioLevelIndicator from '../../../LocalAudioLevelIndicator/LocalAudioLevelIndicator';
 import { LocalVideoTrack } from 'twilio-video';
 import VideoTrack from '../../../VideoTrack/VideoTrack';
 import useVideoContext from '../../../../hooks/useVideoContext/useVideoContext';
+import UserAvatar from '../../../UserAvatar/UserAvatar';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -66,7 +66,7 @@ export default function LocalVideoPreview({ identity }: { identity: string }) {
           <VideoTrack track={videoTrack} isLocal />
         ) : (
           <div className={classes.avatarContainer}>
-            <AvatarIcon />
+            <UserAvatar />
           </div>
         )}
       </div>
