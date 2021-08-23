@@ -1,4 +1,5 @@
 import { Callback } from '../../../types'
+import { isMobile } from '../../../utils';
 import Video, { ConnectOptions, LocalTrack, Room } from 'twilio-video';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppState } from '../../../state';
@@ -37,6 +38,11 @@ export default function useRoom(localTracks: LocalTrack[], onError: Callback, op
             setTimeout(() => setRoom(null));
             document.removeEventListener('turbolinks:before-cache', disconnect);
             updateParticipant(appointmentID, user.participantID, 'disconnected');
+            window.removeEventListener('beforeunload', disconnect);
+
+            if (isMobile) {
+              window.removeEventListener('pagehide', disconnect);
+            }
             // Hard redirect to appointment view
             redirectRootPath();
           });
@@ -52,8 +58,15 @@ export default function useRoom(localTracks: LocalTrack[], onError: Callback, op
           );
 
           setIsConnecting(false);
-          window.addEventListener('turbolinks:before-cache', disconnect)
           updateParticipant(appointmentID, user.participantID, 'connected');
+          window.addEventListener('turbolinks:before-cache', disconnect)
+          // Add a listener to disconnect from the room when a user closes their browser
+          window.addEventListener('beforeunload', disconnect);
+
+          if (isMobile) {
+            // Add a listener to disconnect from the room when a mobile user closes their browser
+            window.addEventListener('pagehide', disconnect);
+          }
         },
         error => {
           onError(error);
