@@ -1,5 +1,5 @@
 import React from 'react';
-import logoImage from '../../../../../../assets/images/logos/mid_blue_logo.png'
+import logoImage from '../../../../../../assets/images/logos/logo-mid.png'
 
 export default function Logo(props) {
   return (
