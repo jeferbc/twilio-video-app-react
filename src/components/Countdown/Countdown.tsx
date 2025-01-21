@@ -15,8 +15,16 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function Countdown() {
   const { user } = useAppState();
+  const [showAlert, setShowAlert] = React.useState(true);
   const timeLeft = useCountdown();
   const classes = useStyles();
+
+  if (timeLeft.minutes < 1 && showAlert) {
+    let text = 'En menos de 1 minuto esta sala se cerrará automáticamente.';
+    text+= user.userType === 'Doctor' ? ' Favor darle cierre a la cita o llamar al usuario y terminarla por otro medio' : 'Gracias por usar nuestros servicios.';
+    window.growl('danger', text);
+    setShowAlert(false);
+  }
 
   return (
     // show countdown only for doctors when 10 minutes remaining. User see 'Cerrando cita' when 5
